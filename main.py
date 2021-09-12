@@ -1,29 +1,17 @@
-import requests, threading, os
+from proxy_requests import ProxyRequests
+import time
+import os
 
-url = input('Link > ')
-amount = input('Threads > ')
+url = input('URL: ')
+reqcount = int(input('Number Of Requests To Send: '))
+uagent = input('User Agent: ')
 
-def thread():
-  while True:
-     s = requests.session()
-     proxy = set()
-     with open("proxies.txt", "r") as f:
-     file_lines1 = f.readlines()
-     for line1 in file_lines1:
-         proxy.add(line1.strip())
-proxies = {
-    'http': 'http://'+line1
+os.system('cls')
+print('Sending Requests, This May Take A While')
+for i in range(reqcount):
+    headers = {
+        'User-agent': f'{uagent}',
     }
-
-     sent = 0
-     r = requests.get(url, proxies=proxies)
-     if r.status_code == 403:
-         print('Invalid URL/Proxy blocked')
-     else:
-      pass
-      sent += 1
-      print(f'%s requests have been sent' % sent)
-
-for _ in range(int(amount)):
-    t = threading.Thread(target=thread)
-    t.start()
+    r = ProxyRequests(url)
+    r.set_headers(headers)
+    r.get_with_headers()
